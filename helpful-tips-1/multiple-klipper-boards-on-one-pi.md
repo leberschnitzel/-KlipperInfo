@@ -50,11 +50,15 @@ If the second command shows multiple results but the first one does not, adjust 
 
    `sudo cp /var/run/klipper.pid /var/run/klipper2.pid`  
 
-8. Edit the configuration file to create second instances of the log file and virtual printer port: 
+8. Edit the configuration file to configure the existing instance of the virtual printer port, so there's no possible interference between the existing instance and new ones: 
+   1. open the configuration in nano text editor: `sudo nano /etc/default/klipper` 
+   2. edit KLIPP\_ARGS line to create the first virtual printer port. It should look something like: `KLIPPY_ARGS="/home/pi/klipper/klippy/klippy.py /home/pi/printer.cfg -l /tmp/klippy.log -I /tmp/printer"` 
+   3. Exit and save changes \(CTRL, X, Y, ENTER\) 
+9. Edit the configuration file to create second instances of the log file and virtual printer port: 
    1. open the configuration in nano text editor: `sudo nano /etc/default/klipper2` 
    2. edit KLIPP\_ARGS line to change the path to the printer2 config file, the klippy2.log file and create the second virtual printer port. It should look something like: `KLIPPY_ARGS="/home/pi/klipper/klippy/klippy.py /home/pi/printer2.cfg -l /tmp/klippy2.log -I /tmp/printer2"` 
    3. Exit and save changes \(CTRL, X, Y, ENTER\) 
-9. Edit the autorun file and change everything that says "klipper" to "klipper2". `sudo nano /etc/init.d/klipper2` and change: 
+10. Edit the autorun file and change everything that says "klipper" to "klipper2". `sudo nano /etc/init.d/klipper2` and change: 
    1. "`klipper daemon`" to "`klipper2 daemon`" 
    2. "`klipper`" to "`klipper2`" 
    3. "`starting klipper`" to "`starting klipper2`" 
@@ -62,11 +66,11 @@ If the second command shows multiple results but the first one does not, adjust 
    5. "`Restarting klipper`" to "`Restarting klipper2`" 
    6. "`Usage: /etc/init.d/klipper {start|stop|status|restart|reload|force-reload}`" to "`Usage: /etc/init.d/klipper2 {start|stop|status|restart|reload|force-reload}`" 
    7. Exit and save changes 
-10. Make the autorun script active: `sudo chmod +x /etc/init.d/klipper2` 
-11. Restart the systemctl so everything starts automatically: `sudo systemctl daemon-reload` 
-12. update rc.d `sudo update-rc.d klipper2 defaults` 
-13. Start the new instance of klipper `sudo /etc/init.d/klipper2 start` 
-14. Check whether the service was successfully added:
+11. Make the autorun script active: `sudo chmod +x /etc/init.d/klipper2` 
+12. Restart the systemctl so everything starts automatically: `sudo systemctl daemon-reload` 
+13. update rc.d `sudo update-rc.d klipper2 defaults` 
+14. Start the new instance of klipper `sudo /etc/init.d/klipper2 start` 
+15. Check whether the service was successfully added:
 
     `systemctl status klipper2.service`
 
@@ -74,6 +78,6 @@ If the second command shows multiple results but the first one does not, adjust 
 
     The klipper2 service is started and you can connect to the second printer  
 
-15. Configure your Octoprint instances, and the Octoklipper plugin to run the corresponding instances of Klipper, making sure to set the correct /tmp/printer in Octoprint AND in the Octoklipper plugin. Set up your printer config files, etc. 
+16. Configure your Octoprint instances, and the Octoklipper plugin to run the corresponding instances of Klipper, making sure to set the correct /tmp/printer in Octoprint AND in the Octoklipper plugin. Set up your printer config files, etc. 
 16. Repeat as necessary to set up more instances 
 
